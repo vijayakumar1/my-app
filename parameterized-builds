@@ -12,4 +12,3 @@ properties([parameters([choice(choices: 'master\nfeature-1\nfeature-2', descript
     }
     
 }
-}
