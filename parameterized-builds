@@ -1,4 +1,3 @@
-pipeline{
 properties([parameters([choice(choices: 'master\nfeature-1\nfeature-2', description: 'Select Branch to build', name: 'branch')])])
  agent {
     node {
@@ -11,4 +10,3 @@ properties([parameters([choice(choices: 'master\nfeature-1\nfeature-2', descript
         git url: 'https://github.com/javahometech/my-app', branch: "${params.branch}"
     }
     
-}
