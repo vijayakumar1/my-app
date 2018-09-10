@@ -7,3 +7,34 @@ node{
     }
     
 }
+----------------------------------------------------------------------------------------------------
+node{
+ws("/appserver/jenkins-workspace/$JOB_NAME")
+   {
+    stage('SCM Checkout')
+    {   echo "Pulling changes from the branch ${params.branch}"
+       git branch: '3ds-server-merchant-config-api-1808-dev ', credentialsId: '9bbe6555-2c59-4706-98f9-24054934970a', url: 'https://git.enstage-sas.com/accosa2/3ds-server/3ds-server-config/3ds-server-merchant-config-api.git'
+     }
+     stage('Static Code Analysis')
+     {
+        def gradleHome="/usr/"
+        sh"${gradleHome}/bin/gradle sonarqube"
+   
+     }
+     stage('Build the jar file')
+     {
+        def gradleHome="/usr/"
+        sh"${gradleHome}/bin/gradle -q capsule"
+        
+     }
+     stage('deploy the jar'){
+     sh '''
+scp -r /home/acsapp/ansi@scripts/jenkins_work_space/build/libs/*capsule.jar acsapp@192.168.108.64:/backup/3ds-server-merchant-config-api/tbd'''
+     }
+
+     stage('Clean the workspace'){
+     sh '''
+rm -rf /home/acsapp/ansi@scripts/jenkins_work_space/build/libs/*'''
+     }
+    }
+}
